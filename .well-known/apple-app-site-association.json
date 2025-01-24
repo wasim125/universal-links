@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "47VC8Q6D6D.com.cxpay.app",
-        "paths": ["*"]
+        "paths": ["/path/*", "/another-path/*"]
       }
     ]
   },
