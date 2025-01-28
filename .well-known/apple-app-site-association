@@ -1,16 +1,22 @@
 {
+  "webcredentials": {
+    "apps": [
+      "47VC8Q6D6D.com.cxpay.app"
+    ]
+  },
   "applinks": {
     "apps": [],
     "details": [
       {
-        "appID": "47VC8Q6D6D.com.cxpay.app",
-        "paths": ["/path/*", "/another-path/*"]
+        "appIDs": [
+          "47VC8Q6D6D.com.cxpay.app"
+        ],
+        "components": [
+          {
+            "/": "*"
+          }
+        ]
       }
-    ]
-  },
-  "webcredentials": {
-    "apps": [
-      "47VC8Q6D6D.com.cxpay.app"
     ]
   }
 }
