@@ -3,145 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Hours Tracker</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 380px;
+            background: white;
+            padding: 30px 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
             color: #333;
         }
-        .container {
-            max-width: 500px;
-            margin: 50px auto;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px 30px;
-        }
-        h2 {
-            text-align: center;
-            color: #4CAF50;
-            margin-bottom: 20px;
-        }
-        label {
-            font-size: 1rem;
-            margin-top: 10px;
-            display: block;
-            font-weight: bold;
-        }
-        input, select, button {
+
+        select, input {
             width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 12px;
             font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            margin-top: 8px;
+            outline: none;
             transition: all 0.3s ease;
         }
-        input:focus, select:focus, button:focus {
-            border-color: #4CAF50;
-            outline: none;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+
+        select:focus, input:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
         }
-        button {
-            background-color: #4CAF50;
+
+        .calculate-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            background: #007BFF;
             color: white;
             cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
         }
-        button:hover {
-            background-color: #45a049;
+
+        .calculate-btn:hover {
+            background: #0056b3;
         }
+
         .output {
             margin-top: 20px;
             padding: 15px;
-            background: #f1f1f1;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            background: #f8f9fa;
+            border-radius: 8px;
             font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            display: none;
             text-align: center;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-      
-        <label for="effectiveHours">Effective Hours (e.g., 4h 10m):</label>
-        <input type="text" id="effectiveHours" placeholder="4h 10m">
+        <h2>Work Hours Tracker</h2>
 
-        <label for="lastPunch">Last Punch-in Time (e.g., 3:27 PM):</label>
-        <input type="time" id="lastPunch">
+        <div class="form-group">
+            <label for="effectiveHours">Effective Hours Worked:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="effectiveHoursH" placeholder="Hours" min="0" style="flex: 1;">
+                <input type="number" id="effectiveHoursM" placeholder="Minutes" min="0" max="59" style="flex: 1;">
+            </div>
+        </div>
 
-        <label for="targetHours">Target Hours:</label>
-        <select id="targetHours">
-            <option value="8:00">8 hours</option>
-            <option value="8:24">8:24 hours</option>
-            <option value="8:30">8:30 hours</option>
-            <option value="6:30">6:30 hours</option>
-        </select>
+        <div class="form-group">
+            <label for="lastPunch">Last Punch-in Time:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="lastPunchHours" placeholder="HH" min="1" max="12" style="flex: 1;">
+                <input type="number" id="lastPunchMinutes" placeholder="MM" min="0" max="59" style="flex: 1;">
+                <select id="lastPunchPeriod" style="flex: 1;">
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+            </div>
+        </div>
 
-        <button onclick="calculateCompletionTime()">Calculate Completion Time</button>
+        <div class="form-group">
+            <label for="targetHours">Target Hours:</label>
+            <select id="targetHours">
+                <option value="8">8 hours</option>
+                <option value="8.4">8h 24m</option>
+                <option value="8.5">8h 30m</option>
+                <option value="6.5">6h 30m</option>
+            </select>
+        </div>
+
+        <button class="calculate-btn" onclick="calculateCompletionTime()">Calculate Completion Time</button>
 
         <div class="output" id="output"></div>
     </div>
 
     <script>
         function calculateCompletionTime() {
-            const effectiveHoursInput = document.getElementById("effectiveHours").value;
-            const lastPunchInput = document.getElementById("lastPunch").value;
-            const targetHoursInput = document.getElementById("targetHours").value;
+            const effectiveHoursH = parseInt(document.getElementById("effectiveHoursH").value) || 0;
+            const effectiveHoursM = parseInt(document.getElementById("effectiveHoursM").value) || 0;
+            const lastPunchHours = parseInt(document.getElementById("lastPunchHours").value) || 0;
+            const lastPunchMinutes = parseInt(document.getElementById("lastPunchMinutes").value) || 0;
+            const targetHoursInput = parseFloat(document.getElementById("targetHours").value);
+            const lastPunchPeriod = document.getElementById("lastPunchPeriod").value;
             const outputDiv = document.getElementById("output");
 
-            if (!effectiveHoursInput || !lastPunchInput) {
-                outputDiv.innerHTML = "Please enter all required fields.";
-                return;
-            }
-
-            // Parse effective hours (e.g., "4h 10m")
-            const match = effectiveHoursInput.match(/(\d+)h\s*(\d+)?m?/);
-            if (!match) {
-                outputDiv.innerHTML = "Invalid effective hours format. Use '4h 10m'.";
-                return;
-            }
-
-            const effectiveHours = parseInt(match[1], 10) || 0;
-            const effectiveMinutes = parseInt(match[2], 10) || 0;
-
-            // Parse last punch-in time
-            const [lastPunchHours, lastPunchMinutes] = lastPunchInput.split(":").map(Number);
-
-            // Parse target hours
-            const [targetHours, targetMinutes] = targetHoursInput.split(":").map(Number);
-
-            // Calculate total effective time in minutes
-            const totalEffectiveMinutes = effectiveHours * 60 + effectiveMinutes;
-
-            // Calculate target time in minutes
-            const targetTotalMinutes = targetHours * 60 + targetMinutes;
-
-            // Calculate remaining time to complete target
+            const totalEffectiveMinutes = (effectiveHoursH * 60) + effectiveHoursM;
+            const targetTotalMinutes = targetHoursInput * 60;
             const remainingMinutes = targetTotalMinutes - totalEffectiveMinutes;
 
             if (remainingMinutes <= 0) {
-                outputDiv.innerHTML = "Target already completed.";
+                outputDiv.innerHTML = "✅ Target already completed.";
+                outputDiv.style.display = "block";
                 return;
             }
 
-            // Calculate completion time
             const completionMinutes = lastPunchMinutes + remainingMinutes;
             let completionHours = lastPunchHours + Math.floor(completionMinutes / 60);
             const finalMinutes = completionMinutes % 60;
 
-            // Convert to 12-hour format
-            const isPM = completionHours >= 12;
-            completionHours = completionHours % 12 || 12;
+            let isPM = lastPunchPeriod === "PM";
+            if (completionHours >= 12) {
+                isPM = !isPM;
+            }
 
+            completionHours = completionHours % 12 || 12;
             const period = isPM ? "PM" : "AM";
             const completionTime = `${String(completionHours).padStart(2, "0")}:${String(finalMinutes).padStart(2, "0")} ${period}`;
 
-            outputDiv.innerHTML = `<strong>Completion Time:</strong> ${completionTime}`;
+            outputDiv.innerHTML = `⏳ Estimated Completion Time: <strong>${completionTime}</strong>`;
+            outputDiv.style.display = "block";
         }
     </script>
+
 </body>
 </html>
-
